@@ -1,0 +1,37 @@
+<!-- Korisnik navigacija koja se prikazuje na svim stranicama ako korisnik nema administratorske ovlasti -->
+<!-- Ovim načinom smo još više uštedjeli na preglednosti koda, ne dupliciramo na svakoj stranici header
+    i ne trebamo se brinuti oko stvaranja konekcije prema bazi na svakoj stranici,čim dodamo ovaj navbar,
+    automatski smo se i povezali na bazu podataka te je potrebno samo koristiti globalni $db objekt -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="header text-center">
+    <img src="../logo.png" alt="Debate Logo">
+    <nav class="nav justify-content-center">
+        <a class="nav-link text-white" href="/">Home</a>
+        <?php
+            include 'db/connect.php';
+            global $db;
+
+            $sql = "SELECT * FROM kategorija";
+            $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($categories as $category) {
+        echo '<a class="nav-link text-white" href="/kategorija.php?id=' . $category['naziv_kategorije'] . '">' .
+        $category['naziv_kategorije'] . '</a>';
+        }
+        ?>
+        <a class="nav-link text-white" href="/login.php">Login</a>
+    </nav>
+</div>
+<div class="footer">
+    <p>&copy; 2024 Martin Mak</p>
+</div>
+</body>
+</html>
